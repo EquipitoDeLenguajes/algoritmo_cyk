@@ -63,7 +63,31 @@ $ python3 algoritmo_cyk.py gramatica.txt ab
 El resultado será:
 
 ```sh
+Gramática leída:
+['S', 'A', 'B']
+['S', 'A']
+['S', 'B']
+['A', 'a']
+['B', 'b']
+
+Gramática almacenada en el diccionario G:
+{'P': {'S': [['A', 'B'], ['A'], ['B']], 'A': [['a']], 'B': [['b']]}, 'S': 'S'}
+
+Analizando la cadena: ab
+Producción unaria encontrada para 'a': A -> a
+Producción unaria encontrada para 'b': B -> b
+
+Tabla después de la fase 1 (inicialización de la diagonal):
+[['A'], []]
+[[], ['B']]
+Producción binaria encontrada: S -> A B, en T[0][1]
+
+Tabla final después de la fase 2:
+[['A'], ['S']]
+[[], ['B']]
+
 Resultado: Accepted
+Tiempo de ejecución: 0.000084 segundos
 ```
 
 ## Evaluación de la complejidad temporal
