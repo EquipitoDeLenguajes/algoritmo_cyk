@@ -1,25 +1,61 @@
 import sys
 import time
+import random
+import matplotlib.pyplot as plt
 
 P = []
 G = {"P": {}, "S": ""}
 strings = []
 
+
+def evaluar_complejidad_temporal():
+    tiempos = []
+    longitudes = []
+    cadena = ""
+
+    # Generar cadenas de longitud creciente entre 'a' y 'b'
+    for longitud in range(1, 200):
+        cadena = "".join(random.choice("ab") for _ in range(longitud))
+        longitudes.append(longitud)
+
+        # Medir el tiempo de ejecución del algoritmo CYK
+        start_time = time.time()
+        CYK(G, cadena)  # Suponiendo que G está definido correctamente
+        end_time = time.time()
+
+        tiempo = end_time - start_time
+        tiempos.append(tiempo)
+
+        print(
+            f"Longitud: {longitud + 1}, Tiempo de ejecución: {tiempo:.6f} segundos"
+        )
+
+    # Generar la gráfica de tiempos de ejecución
+    plt.plot(longitudes, tiempos, marker="o")
+    plt.xlabel("Longitud de la cadena")
+    plt.ylabel("Tiempo de ejecución (segundos)")
+    plt.title("Complejidad Temporal del Algoritmo CYK")
+    plt.grid(True)
+    plt.show()
+
+
 def read_grammar_from_file(file_path):
     """
     Lee la gramática desde un archivo y la formatea en CNF.
     """
-    with open(file_path, 'r') as file:
+    with open(file_path, "r") as file:
         for line in file:
             line = line.strip()
-            if '->' in line:
+            if "->" in line:
                 # Separar la producción en lado izquierdo y lado derecho
-                left, right = line.split('->')
+                left, right = line.split("->")
                 left = left.strip()
                 # Las producciones pueden estar separadas por '|'
-                right = [r.strip().split() for r in right.split('|')] 
+                right = [r.strip().split() for r in right.split("|")]
                 for r in right:
-                    P.append([left] + r)  # Agregar las producciones a P como lista
+                    P.append(
+                        [left] + r
+                    )  # Agregar las producciones a P como lista
             else:
                 # Si no es una producción, es una cadena a analizar
                 strings.append(line.strip())
@@ -28,6 +64,7 @@ def read_grammar_from_file(file_path):
     print("Gramática leída:")
     for production in P:
         print(production)
+
 
 def CYK(G, x):
     """
@@ -46,7 +83,9 @@ def CYK(G, x):
             for value in values:
                 if len(value) == 1 and value[0] == x[i]:  # Producción unaria
                     T[i][i].append(key)
-                    print(f"Producción unaria encontrada para '{x[i]}': {key} -> {value[0]}")
+                    print(
+                        f"Producción unaria encontrada para '{x[i]}': {key} -> {value[0]}"
+                    )
 
     # Imprimir la tabla después de inicializar la diagonal
     print("\nTabla después de la fase 1 (inicialización de la diagonal):")
@@ -64,7 +103,9 @@ def CYK(G, x):
                             B, C = value
                             if B in T[i][k] and C in T[k + 1][j]:
                                 T[i][j].append(key)
-                                print(f"Producción binaria encontrada: {key} -> {B} {C}, en T[{i}][{j}]")
+                                print(
+                                    f"Producción binaria encontrada: {key} -> {B} {C}, en T[{i}][{j}]"
+                                )
 
     # Imprimir la tabla final después de aplicar CYK
     print("\nTabla final después de la fase 2:")
@@ -83,6 +124,7 @@ def CYK(G, x):
                     if key == G["S"]:
                         return True
         return False
+
 
 def main():
     if len(sys.argv) < 3:
@@ -122,6 +164,7 @@ def main():
     execution_time = end_time - start_time
     print(f"Tiempo de ejecución: {execution_time:.6f} segundos")
 
+
 if __name__ == "__main__":
     main()
-
+    # evaluar_complejidad_temporal()
